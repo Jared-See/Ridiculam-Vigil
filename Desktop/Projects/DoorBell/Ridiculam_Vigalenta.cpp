@@ -2,14 +2,25 @@
 SoftwareSerial Geno(7,8); // Rx , Tx pins
 
 //Variables
+//For Assigning Values to files on the SD Card
 unsigned char Data[10];
 unsigned char i;
+
+//The respective pins on the ultrasonic sensor
+const int trigPin = 5;
+const int echoPin = 10;
+
+//These will be used to
+long duration;
+int distanceCm, distanceInch;
 
 void setup() {
   delay(1000);
   Geno.begin(9600);
   delay(1000);
   SetVolume(30);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
   playTrack(1);
 }
 
@@ -57,10 +68,18 @@ void Command(unsigned char *Data, int length){
     }
 
 void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distanceCm= duration*0.034/2;
+  distanceInch = duration*0.0133/2;
 
-
-  playTrack(1);
-
-  playTrack(2);
-
+  if(distanceCm < 65){ //When someone walsk in my door
+    while(distanceCm){ //I chose to use a while statement so it will paly multiple songs if more than one perosn walks into my room at a time
+      playTrack(random(1,65));
+    }
+  }
 }
