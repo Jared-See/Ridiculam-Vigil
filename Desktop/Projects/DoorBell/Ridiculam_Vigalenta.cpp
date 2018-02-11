@@ -10,7 +10,11 @@ unsigned char i;
 const int trigPin = 5;
 const int echoPin = 10;
 
-//These will be used to
+/*
+These will be used to keep track of the time it takes the
+//Sound to echo back which will give us the distnace
+After dividing it by its respective unit of measurment
+*/
 long duration;
 int distanceCm, distanceInch;
 
@@ -68,18 +72,16 @@ void Command(unsigned char *Data, int length){
     }
 
 void loop() {
-  digitalWrite(trigPin, LOW);
+  digitalWrite(trigPin, LOW);   //Clears the Trigger Pin
   delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
+  digitalWrite(trigPin, HIGH); //Makes an ultrasonic sound
   delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
+  digitalWrite(trigPin, LOW);  //Stops the ultrasonic sound
+  duration = pulseIn(echoPin, HIGH); //Times the sound(s)
   distanceCm= duration*0.034/2;
   distanceInch = duration*0.0133/2;
 
-  if(distanceCm < 65){ //When someone walsk in my door
-    while(distanceCm){ //I chose to use a while statement so it will paly multiple songs if more than one perosn walks into my room at a time
-      playTrack(random(1,65));
-    }
+  while(distanceCm < 65){ //I choose to use a while statement so it will play multiple songs if more than one perosn walks into my room at once
+    playTrack(random(1,65)); //Plays a random track
   }
 }
