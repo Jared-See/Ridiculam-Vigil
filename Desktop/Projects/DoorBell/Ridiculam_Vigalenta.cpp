@@ -1,31 +1,15 @@
 #include <SoftwareSerial.h>
-SoftwareSerial Geno(7,8); // Rx , Tx pins
+SoftwareSerial Geno(7,8); // Rx , Tx
 
-//Variables
-//For Assigning Values to files on the SD Card
 unsigned char Data[10];
 unsigned char i;
-
-//The respective pins on the ultrasonic sensor
-const int trigPin = 5;
-const int echoPin = 10;
-
-/*
-These will be used to keep track of the time it takes the
-//Sound to echo back which will give us the distnace
-After dividing it by its respective unit of measurment
-*/
-long duration;
-int distanceCm, distanceInch;
 
 void setup() {
   delay(1000);
   Geno.begin(9600);
   delay(1000);
   SetVolume(30);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  playTrack(1);
+
 }
 
 void playTrack(int num){
@@ -42,7 +26,7 @@ void playTrack(int num){
 
     play_pause();
 
-    delay(3000);
+    delay(10000);
 
 }
 
@@ -63,7 +47,6 @@ void play_pause(){
   Command(Data,4);
 }
 
-//Writes each file on the sd card as a piece of date
 void Command(unsigned char *Data, int length){
     for(int i=0; i<length; i++){
     Geno.write(Data[i]);
@@ -72,16 +55,10 @@ void Command(unsigned char *Data, int length){
     }
 
 void loop() {
-  digitalWrite(trigPin, LOW);   //Clears the Trigger Pin
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH); //Makes an ultrasonic sound
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);  //Stops the ultrasonic sound
-  duration = pulseIn(echoPin, HIGH); //Times the sound(s)
-  distanceCm= duration*0.034/2;
-  distanceInch = duration*0.0133/2;
 
-  while(distanceCm < 65){ //I choose to use a while statement so it will play multiple songs if more than one perosn walks into my room at once
-    playTrack(random(1,65)); //Plays a random track
-  }
+
+playTrack(1);
+
+playTrack(2);
+
 }
