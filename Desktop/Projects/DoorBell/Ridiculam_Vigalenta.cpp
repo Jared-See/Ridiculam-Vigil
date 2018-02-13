@@ -4,12 +4,22 @@ SoftwareSerial Geno(7,8); // Rx , Tx
 unsigned char Data[10];
 unsigned char i;
 
+// defines pins numbers
+const int trigPin = 8;
+const int echoPin = 9;
+
+// defines variables
+long duration;
+int distance;
+
 void setup() {
   delay(1000);
   Geno.begin(9600);
   delay(1000);
   SetVolume(30);
-
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  Serial.begin(9600); // Starts the serial communication
 }
 
 void playTrack(int num){
@@ -56,9 +66,24 @@ void Command(unsigned char *Data, int length){
 
 void loop() {
 
+  // Clears the trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
 
-playTrack(1);
+  // Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
 
-playTrack(2);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoPin, HIGH);
 
+  // Calculating the distance
+  distance= duration*0.034/2;
+
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  //playTrack(1);
+  //playTrack(2);
 }
