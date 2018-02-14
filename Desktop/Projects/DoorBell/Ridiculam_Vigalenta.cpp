@@ -24,7 +24,7 @@ void setup() {
 
 void playTrack(int num){
 
-    delay(1000);
+    delay(100);
 
     Data[0] = 0x7E;
     Data[1] = 0x04;
@@ -65,7 +65,11 @@ void Command(unsigned char *Data, int length){
     }
 
 void loop() {
-
+  //Assigns a random number
+  int song = random(0,200);
+  Serial.print("Song is:");
+  Serial.print(song);
+  Serial.print("\n");
   // Clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -83,7 +87,9 @@ void loop() {
 
   Serial.print("Distance: ");
   Serial.println(distance);
-
+  if(distance < 20){
+    playTrack(25);
+  }
   //playTrack(1);
   //playTrack(2);
 }
