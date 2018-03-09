@@ -1,31 +1,72 @@
+#include <Ultrasonic.h>
+
 #include <SoftwareSerial.h>
-#include <MP3.h>
+SoftwareSerial Geno(7,8); // Rx , Tx
 
-/** define mp3 class */
-MP3 mp3;
+unsigned char Data[10];
+unsigned char i;
 
-void setup()
-{
-  /** begin function */
-  mp3.begin(MP3_SOFTWARE_SERIAL);    // select software serial
-  //  mp3.begin();                       // select hardware serial(or mp3.begin(MP3_HARDWARE_SERIAL);)
+// defines pins numbers
+Ultrasonic ultrasonic(12, 13);
 
-  /** set volum to the MAX */
-  mp3.volume(0x1F);
+void setup() {
+  delay(1000);
+  Geno.begin(9600);
+  delay(1000);
+  SetVolume(30);
 
-  /** set MP3 Shield CYCLE mode */
-  mp3.set_mode(MP3::RANDOM);
-
-  /** play music in sd, '0001' for first music */
-  mp3.play_sd(0x0001);
-
-  /** play music in USB-disk */
-  //mp3.play_usb_disk(0x0001);
-
-  /** play music in SPI FLASH */
-  //mp3.play_spi_flash(0x0001);
+  Serial.begin(9600); // Starts the serial communication
 }
 
-void loop()
-{
+void playTrack(int num){
+
+    delay(100);
+
+    Data[0] = 0x7E;
+    Data[1] = 0x04;
+    Data[2] = 0xA0;
+    Data[3] = 0x00;
+    Data[4] = 0x00 + num;
+    Data[5] = 0x7E;
+   Command(Data,6);
+
+    play_pause();
+
+    delay(23000);
+
+}
+
+void SetVolume( int vol){
+   Data[0] = 0x7E;          // START
+   Data[1] = 0x03;          // Length Not 0x02
+   Data[2] = 0xA7;          // Command
+   Data[3] = vol;          // new volume
+   Data[4] = 0x7E;          // END
+   Command(Data,5);
+}
+
+void play_pause(){
+  Data[0] = 0x7E;          // START
+  Data[1] = 0x02;          // Length
+  Data[2] = 0xA3;          // Command
+  Data[3] = 0x7E;          //Mode parameter
+  Command(Data,4);
+}
+
+void Command(unsigned char *Data, int length){
+    for(int i=0; i<length; i++){
+    Geno.write(Data[i]);
+    }
+
+    }
+
+void loop() {
+
+  Serial.print(ultrasonic.distanceRead());
+  Serial.print("\n");
+
+  if(ultrasonic.distanceRead() < 50 && ultrasonic.distanceRead() != 0){
+   playTrack(random(1,104));
+  }
+
 }
