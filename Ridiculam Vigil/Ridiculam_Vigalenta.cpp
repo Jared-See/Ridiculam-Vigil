@@ -1,5 +1,10 @@
-#include <Ultrasonic.h>
+/*
+Hello, Thanks for using my code,
+if you have an issues or comments just
+make an error on my github @Jared-See
+*/
 
+#include <Ultrasonic.h>
 #include <SoftwareSerial.h>
 SoftwareSerial Geno(7,8); // Rx , Tx
 
@@ -7,7 +12,7 @@ unsigned char Data[10];
 unsigned char i;
 
 // defines pins numbers
-Ultrasonic ultrasonic(12, 13);
+Ultrasonic ultrasonic(12, 13); //Use your own pins
 
 void setup() {
   delay(1000);
@@ -66,7 +71,7 @@ void loop() {
   Serial.print("\n");
 
   if(ultrasonic.distanceRead() < 50 && ultrasonic.distanceRead() != 0){
-   playTrack(random(1,104));
+   playTrack(random(1,104)); //Replace 104 with the number of mp3 files you have
   }
 
 }

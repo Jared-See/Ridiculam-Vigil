@@ -1,0 +1,1 @@
+Place your mp3 files here labeled track001.mp3, track002.mp3 and so on then delete this .txt file before you upload your tracks to your sd card.
